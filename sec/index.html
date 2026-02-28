@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Crescent Moon</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #fbc2eb, #a6c1ee, #e0c3fc, #8ec5fc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Container for the pages */
+        .app-container {
+            position: relative;
+            width: 82%; /* Reduced from 90% to show more sides */
+            max-width: 500px;
+            height: 75vh; /* Reduced from 85vh to leave top and bottom space */
+            perspective: 1000px;
+            z-index: 5;
+        }
+
+        /* Mobile adjustments to keep the text fitting nicely inside the smaller card */
+        @media (max-width: 600px) {
+            .glass-card { padding: 30px 20px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.6rem; }
+        }
+        /* Page styling */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            z-index: 10;
+        }
+
+        /* Glassmorphism Card Aesthetic */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            padding: 40px 30px;
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Typography */
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #1a252f;
+            margin-bottom: 15px;
+        }
+
+        h1 { font-size: 2.2rem; }
+        h2 { font-size: 1.8rem; }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .poem-content {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2d3748;
+            flex-grow: 1;
+            overflow-y: auto;
+            text-align: center;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+        }
+
+        /* Custom Scrollbar for the soft aesthetic */
+        .poem-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .poem-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .poem-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-top: auto;
+        }
+        .polaroid {
+            background: #fff;
+            padding: 10px 10px 25px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transform: rotate(-4deg);
+            width: 140px;
+            margin: 0 auto 20px auto;
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.05); /* Straightens out when touched */
+        }
+        .polaroid img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background-color: #eee; /* Placeholder color if image breaks */
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Page specific styling */
+        #page1 .glass-card {
+            justify-content: center;
+        }
+        
+        .sparkle {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Floating Emojis Background */
+        .emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1; /* Keeps them safely behind the glass cards */
+            pointer-events: none; /* Ensures they don't block clicks */
+        }
+
+        .floating-emoji {
+            position: absolute;
+            bottom: -10%;
+            opacity: 0.4; /* Soft transparency to match the aesthetic */
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5; /* Fade in */
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg); /* Float to top and spin gently */
+                opacity: 0; /* Fade out */
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        /* Custom Easter Egg Pop-up */
+        .popup-card {
+            position: fixed;
+            bottom: -100px; /* Hidden off-screen initially */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            color: #2d3748;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            pointer-events: none; /* So it doesn't block scrolling */
+        }
+
+        .popup-card.show {
+            bottom: 40px; /* Slides up into view */
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="page active" id="page1">
+            <div class="glass-card">
+                <div class="sparkle">✨</div>
+                <div class="subtitle">A Special Memory</div>
+                <h1>My Crescent Moon,<br>Chandni🤍</h1>
+                <p id="typewriter" style="margin-bottom: 40px; color: #4a5568;"></p>
+                <button class="btn" style="margin-top: 0;" onclick="goToPage(2)">Open Note</button>
+            </div>
+        </div>
+
+        <div class="page" id="page2">
+            <div class="glass-card">
+                <h2>For You 🌹</h2>
+                <div class="poem-content">
+                    <b>Eid Mubarak, my dearest one,<br>
+                    My radiant moon, my morning sun,<br>
+                    This holy day brings joy anew,<br>
+                    But my greatest blessing, is you.<br><br>
+
+                    Your eyes outshine the festive lights,<br>
+                    A beacon through the darkest nights,<br>
+                    With every blink, they softly gleam,<br>
+                    And pull me deeper in a dream.<br><br>
+
+                    I prayed for peace, I prayed for grace,<br>
+                    And then I saw your lovely face,<br>
+                    Allah heard my quiet plea,<br>
+                    And sent You down to me.<br><br>
+
+                    Your laughter is a sweet refrain,<br>
+                    Like music dancing in the rain,<br>
+                    It fills my heart with boundless cheer,<br>
+                    And makes the shadows disappear.<br><br>
+
+                    Your kindness is a quiet stream,<br>
+                    More precious than a fleeting dream,<br>
+                    You treat the world with such sweet care,<br>
+                    A soul so gentle and so rare.<br><br>
+
+                    The henna on your hands so fine,<br>
+                    A work of art, a sweet design,<br>
+                    But even art could never trace,<br>
+                    The pure perfection of your face.<br><br>
+
+                    I wish you joy, I wish you peace,<br>
+                    I wish your happiness won't cease,<br>
+                    May Allah bless your every step,<br>
+                    And guard the promises we've kept.<br><br>
+
+                    I wish you health, I wish you light,<br>
+                    To guide you through the darkest night,<br>
+                    May every sorrow pass you by,<br>
+                    And wipe the tears from your sweet eye.<br><br>
+
+                    May every prayer you whisper low,<br>
+                    Take root and beautifully grow,<br>
+                    May every dream you hold inside,<br>
+                    Become a reality, open wide.<br><br>
+
+                    You are the calm within my storm,<br>
+                    The fire that keeps my spirit warm,<br>
+                    The gentle touch that heals my soul,<br>
+                    The missing piece that makes me whole.<br><br>
+
+                    Your grace is like a blooming rose,<br>
+                    That ever-gently, softly grows,<br>
+                    With every petal, soft and sweet,<br>
+                    You make my life so quite complete.<br><br>
+
+                    You have a heart of purest gold,<br>
+                    A wondrous story to be told,<br>
+                    With endless depth and loving might,<br>
+                    You make the heavy burdens light.<br><br>
+
+                    Your elegance is plain to see,<br>
+                    A quiet, royal majesty,<br>
+                    You walk with such a regal flair,<br>
+                    And turn heads simply standing there.<br><br>
+
+                    May all your days be filled with sweet,<br>
+                    And joyful moments when we meet,<br>
+                    May every morning bring you hope,<br>
+                    And give you strength to climb and cope.<br><br>
+
+                    You are my joy, my truest friend,<br>
+                    A beautiful story without an end,<br>
+                    Let festive joys fill every space,<br>
+                    Reflected in your gorgeous face.<br></b>
+                </div>
+                <button class="btn" onclick="goToPage(3)">Continue >>></button>
+            </div>
+        </div>
+
+        <div class="page" id="page3">
+            <div class="glass-card" style="justify-content: center;">
+                <div class="sparkle" style="animation-delay: 1s;">🌙</div>
+                <div class="polaroid">
+                    <img src="" alt="Image Unavailable">
+                </div>
+                <h2 style="font-size: 2rem;">Eid Mubarak</h2>
+                <p style="font-family: 'Playfair Display', serif; font-size: 1.2rem; line-height: 1.8; margin: 20px 0 40px 0; color: #2d3748; font-style: italic;">
+                    "The sweetest,the most beautiful, my dear,<br>
+                    I am so glad that you are here...<br><br>
+                    Forever yours, in joy and pride,<br>
+                    With you forever by my side."<br><br>--Your 'pagal'<br>
+                </p>
+                (Ur pics unavailable here cuz<br>you haven't sent any yet. 🙃)
+                <button class="btn" onclick="goToPage(1)">Read Again</button>
+                <div onclick="showPopup()" 
+                     style="position: absolute; bottom: 20px; right: 25px; font-size: 2.0rem; opacity: 2.0; cursor: pointer; transition: transform 0.3s;">
+                    🎁
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="easterEggPopup" class="popup-card">
+        ✨ My Eid is incomplete without You, just like my life is. ✨
+    </div>
+    <script>
+        function goToPage(pageNumber) {
+            // Remove active class from all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Add active class to the target page
+            const targetPage = document.getElementById('page' + pageNumber);
+            targetPage.classList.add('active');
+
+            // Reset scroll position if opening page 2
+            if (pageNumber === 2) {
+                setTimeout(() => {
+                    document.querySelector('.poem-content').scrollTop = 0;
+                }, 300);
+            }
+        }
+        // Function to create floating background emojis
+        function createFloatingEmojis() {
+            // You can change or add any emojis you like here!
+            const emojis = ['🌙', '✨', '🌸', '💖', '🕊️', '🌷', '🍀'];
+            const container = document.createElement('div');
+            container.className = 'emoji-container';
+            document.body.appendChild(container);
+
+            const emojiCount = 15; // Number of emojis on screen at once
+
+            for (let i = 0; i < emojiCount; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'floating-emoji';
+                // Pick a random emoji from the list
+                emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                // Randomize their starting position, size, and floating speed
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                emoji.style.animationDuration = (Math.random() * 10 + 12) + 's'; // Floats between 12s and 22s
+                emoji.style.animationDelay = (Math.random() * 10) + 's';
+                
+                container.appendChild(emoji);
+            }
+        }
+        
+        // Start the emojis as soon as the page loads
+        window.onload = createFloatingEmojis;
+
+        // Typewriter Effect
+        const text = "A note written just for you, to celebrate today.";
+        let index = 0;
+        function type() {
+            if (index < text.length) {
+                document.getElementById("typewriter").innerHTML += text.charAt(index);
+                index++;
+                setTimeout(type, 70); // Speed of typing in milliseconds
+            }
+        }
+        // Start typing 1 second after page loads
+        setTimeout(type, 1000);
+
+        // Show Custom Easter Egg Pop-up
+        function showPopup() {
+            const popup = document.getElementById('easterEggPopup');
+            popup.classList.add('show');
+            
+            // Auto-hide after 3.5 seconds
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
