@@ -36,8 +36,8 @@
         /* Container for the pages */
         .app-container {
             position: relative;
-            width: 82%; /* Reduced from 90% to show more sides */
-            max-width: 500px;
+            width: 90%; /* Reduced from 90% to show more sides */
+            max-width: 550px;
             height: 75vh; /* Reduced from 85vh to leave top and bottom space */
             perspective: 1000px;
             z-index: 5;
@@ -212,10 +212,10 @@
                 opacity: 0;
             }
             10% {
-                opacity: 0.5; /* Fade in */
+                opacity: 0.9; /* Fade in */
             }
             90% {
-                opacity: 0.5;
+                opacity: 0.9;
             }
             100% {
                 transform: translateY(-110vh) rotate(360deg); /* Float to top and spin gently */
@@ -453,4 +453,5 @@
         }
     </script>
 </body>
+
 </html>
